@@ -6,7 +6,7 @@ class Tree
 	
 	protected Tree() { root = new Node( 0 ); }
 	
-	protected Tree( int newValue ) { root = new Node( newValue ); }
+	protected Tree( Node newNode ) { root = newNode; }
 	
 	protected Node add( Node newNode ) { return add( this.root, newNode ); }
 	
