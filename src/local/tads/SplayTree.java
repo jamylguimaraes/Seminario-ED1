@@ -2,22 +2,31 @@ package local.tads;
 
 public class SplayTree extends Tree
 {
-	private Node splay( Node root, int key )
+	private void splay( Tree tree, int key )
 	{
-		if( root == null )
-			return root;
-		
 		Tree leftTree = null, rightTree = null;
 		
-		if( key > root.value )
+		while( key != tree.value() || !( tree.left() == null && tree.right() == null ) )
 		{
-			leftTree = new Tree( root );
-			return splay( root.right, key );
+			if( key > tree.value() )
+			{
+				if( leftTree == null )
+					leftTree = new Tree( tree.root() );
+				
+				leftTree.add( tree.root() );
+				tree = new Tree( tree.right() );
+			}
+			else if( key < tree.value() )
+			{
+				if( rightTree == null )
+					rightTree = new Tree( tree.root() );
+				
+				rightTree.add( tree.root() );
+				tree = new Tree( tree.left() );
+			}
 		}
-		else if( key < root.value )
-		{
-			rightTree = new Tree( root );
-			return splay( root.left, key );
-		}
+
+		tree.add( leftTree.root() );
+		tree.add( rightTree.root() );
 	}
 }
