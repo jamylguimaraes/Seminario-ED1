@@ -72,5 +72,7 @@ class Tree
 	
 	protected Node right() { return root.right; }
 	
+	protected Node root() { return root; }
+	
 	protected int value() { return root.value; }
 }
