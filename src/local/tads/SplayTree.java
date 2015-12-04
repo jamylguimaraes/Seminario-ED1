@@ -202,4 +202,36 @@ public class SplayTree
 			
 			return root; // nova raiz
 		}
+		
+		public void display(){
+		
+			System.out.print("== Splay Tree ==" );
+			System.out.println();
+			int nBlanks = 32;
+			int itemsPerRow = 1;
+			int column = 0;
+			int j = 0;
+
+			String dots = "...............................";
+			System.out.println(dots+dots);
+			// BinaryNode tmp; Cria um tmp do tipo BinaryNode, armazena root, root recebe root.root
+			while(root.leftChild != null && root.rightChild != null){
+				if(column == 0)
+					for(int k=0; k<nBlanks; k++)
+						System.out.print(" ");
+						System.out.print(root.leftChild.value);
+						System.out.print(root.rightChild.value);
+				if(++j == 10)
+					break;
+				if(++column==itemsPerRow){
+					nBlanks /= 2;
+					itemsPerRow *= 2;
+					column = 0;
+					System.out.println();
+				}else
+					for(int k=0; k<nBlanks*2-2; k++)
+						System.out.print(" ");
+					} 
+				System.out.println("\n"+dots+dots); 
+			} 
 }
