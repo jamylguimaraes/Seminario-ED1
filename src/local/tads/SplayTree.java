@@ -197,16 +197,16 @@ public class SplayTree
 			return root; // nova raiz
 		}
 		
-		public void preOrder( BinaryNode root)
+		public void inOrder( BinaryNode root)
 		{
 			if (root != null)
 			{
 				if(root.leftChild != null){
-				preOrder(root.leftChild);
+					inOrder(root.leftChild);
 				}
 				System.out.print(root.value);
 				if(root.rightChild != null){
-				preOrder(root.rightChild);
+					inOrder(root.rightChild);
 				}
 			}
 		}
@@ -219,6 +219,6 @@ public class SplayTree
 			System.out.println(dots+dots);
 			BinaryNode tmp = new BinaryNode();
 			tmp = root;
-			preOrder(tmp); 
+			inOrder(tmp); 
 			} 
 }
