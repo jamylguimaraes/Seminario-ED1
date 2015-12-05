@@ -13,6 +13,7 @@
  * menos complexa, pois, a informacao da altura eh irrelevante.
  */
 package local.tads;
+import local.classes.*;
 
 public class SplayTree
 {

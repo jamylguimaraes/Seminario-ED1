@@ -1,5 +1,5 @@
-package local.tads;
-
+package local.classes;
+import local.tads.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

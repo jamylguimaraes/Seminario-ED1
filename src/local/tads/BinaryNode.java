@@ -9,10 +9,11 @@
  */
 package local.tads;
 
-class BinaryNode
+public class BinaryNode
 {
-	int value;
-	BinaryNode leftChild, rightChild;
+	public int value;
+	public BinaryNode leftChild;
+	public BinaryNode rightChild;
 	
 	BinaryNode()
 	{
