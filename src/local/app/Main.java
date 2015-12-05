@@ -50,12 +50,12 @@ public class Main
 				
 				while( linha.hasMoreElements() )
 				{
-					tree.insert( Integer.parseInt( linha.nextToken() ) );
+					tree.insert( Integer.parseInt( (String) linha.nextElement()) );
 					loops--;
 				}
 			}
 			catch( Exception e ) { continue; }
-			tree.display();
 		}
+		tree.display(loops);
 	}
 }

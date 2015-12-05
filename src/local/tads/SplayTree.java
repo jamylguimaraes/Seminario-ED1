@@ -56,36 +56,39 @@ public class SplayTree
 	 */
 	public void insert( int newValue ) throws Exception
 	{
-		BinaryNode newNode = new BinaryNode( newValue ); // Esta variavel existe para que a classe fora do pacote que use
+		BinaryNode r = root;
+		BinaryNode newNode = new BinaryNode(); // Esta variavel existe para que a classe fora do pacote que use
+		newNode.value = newValue;
 														 // esta classe nao precise acessar a classe BinaryNode (encapsulamento).
-		if( root == null )
+		if( r == null )
 		{  
-			//newNode.leftChild = newNode.rightChild = nullNode; // Ainda preciso entender.
-			
-			// Se root eh nulo a unica operacao a ser feita eh a atribuicao do novo noh a raiz.
+			newNode.leftChild = newNode.rightChild = null;
 			root = newNode;
 			return;
 		}
 
-		root = splay( root, newNode.value );	// Se root eh nao nulo, inicia-se a verificacao
+		r = splay( r, newNode.value );	// Se root eh nao nulo, inicia-se a verificacao
 												// de existencia do valor informado.
-		if( newNode.value < root.value )
+		if( newNode.value < r.value )
 		{
-			newNode.leftChild = root.leftChild;	// Se o valor nao foi encontrado, a adicao eh permitida.
-			newNode.rightChild = root;			// TODO newNode menor que root nao implica em newNode menor que root.leftChild.
-			root.leftChild = nullNode;			// Corrigir com recursao de rotacoes.
+			newNode.leftChild = r.leftChild;	// Se o valor nao foi encontrado, a adicao eh permitida.
+			newNode.rightChild = r;			// TODO newNode menor que root nao implica em newNode menor que root.leftChild.
+			r.leftChild = null;			// Corrigir com recursao de rotacoes.
 			root = newNode;
+			return;
 		}
-		else if( newNode.value > root.value ) 
+		else if( newNode.value > r.value ) 
 		{
-			newNode.rightChild = root.rightChild;
-			newNode.leftChild = root;				// TODO a mesma regra que vale para o lado esquerdo deve ser aplicada no direito.
-			root.rightChild = nullNode;
+			newNode.rightChild = r.rightChild;
+			newNode.leftChild = r;				// TODO a mesma regra que vale para o lado esquerdo deve ser aplicada no direito.
+			root.rightChild = null;
 			root = newNode;
+			return;
 		}
-		else { throw new Exception( "Valor duplicado." ); }
-		
-		newNode = null; // Para que o próximo insert seja uma nova chamada
+		else { 
+			root = r;
+			return;
+		}
 	}
 	
 	/**
@@ -95,39 +98,33 @@ public class SplayTree
 	 * @throws Exception se o numero informado nao for encontrado.
 	 */
 	public void remove( int key ) throws Exception
-	{
-		BinaryNode newTree = null;
-		
-		// Se key for encontrada, ela serah a raiz
-		root = splay( root, key );
-		
-		// Como o splay joga o endereco noh que contem o valor
-		// buscado, caso ele exista na arvore, na raiz, a unica
-		// verificacao a se fazer agora eh se a raiz contem esse valor.
-		if( root.value != key )
-			throw new Exception( "Nao encontrado." );
-		
-		// Caso o valor seja encontrado, neste ponto do programa ele eh
-		// a raiz, logo a partir daqui comecao a sua remocao.
-		
-		// Se o filho a esquerda for nulo, basta substituir root pelo
-		// seu filho a direita.
-		if( root.leftChild == nullNode )
-			newTree = root.rightChild;
-		else
 		{
+			BinaryNode newTree = root, x;
+		
+			if(newTree == null) return;
+		// Se key for encontrada, ela serah a raiz
+			newTree = splay( newTree, key );
+		
+			if( newTree.value == key ){
+				// Se o filho a esquerda for nulo, basta substituir root pelo
+				// seu filho a direita.
+				if( root.leftChild == null ){
+					x = newTree.rightChild;
+				}else
+				{
 			// Caso o filho a esquerda nao seja nulo, root serah substituido
 			// por este, em seguida o splay vai rebalancear a arvore, fazendo
 			// as rotacoes necessarias e, como o menor noh da arvore da direita
 			// eh maior que o maior noh da arvore da esquerda, a raiz da arvore
 			// esquerda serah adicionada a direita da nova arvore.
-			newTree = root.leftChild;
-			newTree = splay( newTree, key );
-			newTree.rightChild = root.rightChild;
+					x = splay(newTree.leftChild, key);
+					x.rightChild = newTree.rightChild;
+				}
+				root = x; // As operacoes de troca anteriores sao efetivamente salvas aqui.
+				return;
+			}
+			root = newTree;
 		}
-		root = newTree; // As operacoes de troca anteriores sao efetivamente salvas aqui.
-	}
-	
 	/**
 	 * Faz uma busca binaria na arvore, ao mesmo tempo em que a atualiza,
 	 * jogando o valor encontrado ou o valor mais proximo possivel, na raiz.
@@ -144,94 +141,84 @@ public class SplayTree
 	 */
 	private BinaryNode splay( BinaryNode root, int key )
 	{
-		BinaryNode leftTreeMax, rightTreeMin, header;
+		if (root == null) return null;
 		
-		header = root;
-		header.leftChild = header.rightChild = nullNode;
+		BinaryNode header = new BinaryNode(), leftTreeMax, rightTreeMin,tmp;
 		
-		leftTreeMax = rightTreeMin = root;
+		header.leftChild = header.rightChild = null;
+		leftTreeMax = rightTreeMin = header;
 		
-		nullNode.value = key;
 		for( ; ; )
+		{
 			if ( key < root.value )
 			{
+				if (root.leftChild == null) break;
 				if( key < root.leftChild.value )
 				{
-					BinaryNode tmp = root.leftChild;  // Este bloco faz as rotacoes com o filho da esquerda.
+					tmp = root.leftChild;  // Este bloco faz as rotacoes com o filho da esquerda.
 					root.leftChild = tmp.rightChild;
 					tmp.rightChild = root;
 					root = tmp;
+					if (root.leftChild == null) break;
 				}
-				
-				if( root.leftChild == nullNode )
-					break;
 				
 				rightTreeMin.leftChild = root;
 				rightTreeMin = root;
-				
 				root = root.leftChild;
 			} 
 			else if( key > root.value )
 			{
+				if (root.rightChild == null) break;
 				if ( key > root.rightChild.value )
 				{
 					//root = Rotations.rotateWithRightChild(root);
-					BinaryNode tmp = root.rightChild;        // Este bloco faz as rotacoes com o filho da direita.
+					tmp = root.rightChild;        // Este bloco faz as rotacoes com o filho da direita.
 				    root.rightChild = tmp.leftChild;
 				    tmp.leftChild = root;
 				    root = tmp;
+				    if (root.rightChild == null) break;
 				}
-				
-				if( root.rightChild == nullNode )
-					break;
-				
-				// Ligar lado esquerdo
+			
 				leftTreeMax.rightChild = root;
 				leftTreeMax = root;
 				root = root.rightChild;
 			}
 			else
+			{
 				break;
-			
+			}
+			}
 			// Unir as arvores
 			leftTreeMax.rightChild = root.leftChild;
 			rightTreeMin.leftChild = root.rightChild;
-			
 			root.leftChild = header.rightChild;
 			root.rightChild = header.leftChild;
 			
 			return root; // nova raiz
 		}
 		
-		public void display(){
+		public void preOrder( BinaryNode root)
+		{
+			if (root != null)
+			{
+				if(root.leftChild != null){
+				preOrder(root.leftChild);
+				}
+				System.out.print(root.value);
+				if(root.rightChild != null){
+				preOrder(root.rightChild);
+				}
+			}
+		}
+		
+		public void display(int n){
 		
 			System.out.print("== Splay Tree ==" );
 			System.out.println();
-			int nBlanks = 32;
-			int itemsPerRow = 1;
-			int column = 0;
-			int j = 0;
-
 			String dots = "...............................";
 			System.out.println(dots+dots);
-			// BinaryNode tmp; Cria um tmp do tipo BinaryNode, armazena root, root recebe root.root
-			while(root.leftChild != null && root.rightChild != null){
-				if(column == 0)
-					for(int k=0; k<nBlanks; k++)
-						System.out.print(" ");
-						System.out.print(root.leftChild.value);
-						System.out.print(root.rightChild.value);
-				if(++j == 10)
-					break;
-				if(++column==itemsPerRow){
-					nBlanks /= 2;
-					itemsPerRow *= 2;
-					column = 0;
-					System.out.println();
-				}else
-					for(int k=0; k<nBlanks*2-2; k++)
-						System.out.print(" ");
-					} 
-				System.out.println("\n"+dots+dots); 
+			BinaryNode tmp = new BinaryNode();
+			tmp = root;
+			preOrder(tmp); 
 			} 
 }
