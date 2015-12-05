@@ -13,14 +13,14 @@ import local.tads.*;
 
 public class Main
 {
-	private static SplayTree tree;
+	private static SplayTree2 tree;
 	private static BufferedReader in;
 	private static int loops;
 	
 	public static void main( String[] args )
 	{
 		in = new BufferedReader( new InputStreamReader( System.in ) );
-		tree  = new SplayTree();
+		tree  = new SplayTree2();
 		loops = 0;
 		
 		while( true )
@@ -50,11 +50,15 @@ public class Main
 				
 				while( linha.hasMoreElements() )
 				{
+<<<<<<< Upstream, based on branch 'master' of https://github.com/jamylguimaraes/Seminario-ED1.git
 					tree.insert( Integer.parseInt( (String) linha.nextElement()) );
+=======
+					tree.add( Integer.parseInt( linha.nextToken() ) );
+>>>>>>> dfaaf6e Essa seria a estrutura correta.
 					loops--;
 				}
 			}
-			catch( Exception e ) { continue; }
+			catch( InputMismatchException | IOException e ) { continue; }
 		}
 		tree.display(loops);
 	}
