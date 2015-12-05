@@ -56,6 +56,7 @@ public class Main
 			}
 			catch( Exception e ) { continue; }
 		}
-		tree.display(loops);
+		
+		tree.display();
 	}
 }

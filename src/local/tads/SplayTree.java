@@ -211,14 +211,15 @@ public class SplayTree
 			}
 		}
 		
-		public void display(int n){
+		public void display(){
 		
 			System.out.print("== Splay Tree ==" );
 			System.out.println();
-			String dots = "...............................";
-			System.out.println(dots+dots);
 			BinaryNode tmp = new BinaryNode();
 			tmp = root;
-			Order(tmp); 
+			System.out.print("Elementos da Arvore: ");
+			Order(tmp);
+			System.out.println();
+			BTreePrinter.printNode(tmp);
 			} 
 }
